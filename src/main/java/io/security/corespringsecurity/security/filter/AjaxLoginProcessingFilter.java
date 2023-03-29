@@ -26,7 +26,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
-		if(isAjax(httpServletRequest)) {
+		if(!isAjax(httpServletRequest)) {
 			throw new IllegalStateException("인증처리가 지원되지 않습니다.");
 		}
 

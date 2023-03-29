@@ -4,6 +4,7 @@ import io.security.corespringsecurity.security.configs.provider.CustomAuthentica
 import io.security.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
 import io.security.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Configuration
@@ -40,9 +39,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource;
 
 	@Autowired
+	@Qualifier("customAuthenticationFailureHandler")
 	private AuthenticationFailureHandler authenticationFailureHandler;
 
 	@Autowired
+	@Qualifier("customAuthenticationSuccessHandler")
 	private AuthenticationSuccessHandler authenticationSuccessHandler;
 		// DB에 있는 사용자를 조회하여 권한 부여할 것이므로 인메모리 방식 설정 삭제
 //	@Override
@@ -109,6 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.exceptionHandling()
 				.accessDeniedHandler(accessDeniedHandler());
 	}
+
 
 	@Bean
 	public AccessDeniedHandler accessDeniedHandler() {
