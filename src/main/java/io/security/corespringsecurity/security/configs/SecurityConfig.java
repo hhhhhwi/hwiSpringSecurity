@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
@@ -105,10 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 		.and()
 				.exceptionHandling()
-				.accessDeniedHandler(accessDeniedHandler())
-		.and()
-				.addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class) // 기존의 필터 앞에 위치하여 인증처리
-		;
+				.accessDeniedHandler(accessDeniedHandler());
 	}
 
 	@Bean
@@ -117,12 +116,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		accessDeniedHandler.setErrorPage("/denied");
 		return accessDeniedHandler;
 	}
-	
-	@Bean
-	public AjaxLoginProcessingFilter ajaxLoginProcessingFilter() throws Exception {
-		AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
-		ajaxLoginProcessingFilter.setAuthenticationManager(authenticationManagerBean()); // 매니저를 설정해줘야 한다.
 
-		return ajaxLoginProcessingFilter;
-	}
 }
