@@ -1,5 +1,6 @@
 package io.security.corespringsecurity.security.configs;
 
+import io.security.corespringsecurity.security.common.AjaxLoginAuthenticationEntryPoint;
 import io.security.corespringsecurity.security.configs.provider.CustomAuthenticationProvider;
 import io.security.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -29,11 +31,21 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Qualifier("ajaxAuthenticationFailureHandler")
 	AuthenticationFailureHandler authenticationFailureHandler;
 
+	@Autowired
+	@Qualifier("ajaxAccessDeniedHandler")
+	AccessDeniedHandler accessDeniedHandler;
+
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.antMatcher("/api/**") // api 로 시작하는 요청에 대해서만 ajaxSecurityConfig가 동작하도록
 				.authorizeRequests()
+				.antMatchers("/api/messages").hasRole("MANAGER")
 				.anyRequest().authenticated()
+		.and()
+				.exceptionHandling()
+				.authenticationEntryPoint(new AjaxLoginAuthenticationEntryPoint())
+				.accessDeniedHandler(accessDeniedHandler)
 		.and()
 				.addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class) // 기존의 필터 앞에 위치하여 인증처리
 	;
