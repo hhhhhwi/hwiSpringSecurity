@@ -2,7 +2,7 @@ package io.security.corespringsecurity.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.security.corespringsecurity.domain.AccountDto;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import io.security.corespringsecurity.security.token.AjaxAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -36,10 +36,9 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 			throw new IllegalArgumentException("Username이나 Password이 입력되지 않았습니다.");
 		}
 
-		// 토큰 생성 -- 강의에서 UsernamePasswordAuthenticationToken을 복붙하길래.. 그냥 그걸 쓰겠다;
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountDto.getUsername(), accountDto.getPassword());
+		AjaxAuthenticationToken authenticationToken = new AjaxAuthenticationToken(accountDto.getUsername(),accountDto.getPassword());
 
-		return getAuthenticationManager().authenticate(authenticationToken);
+		return this.getAuthenticationManager().authenticate(authenticationToken);
 	}
 
 	private boolean isAjax(HttpServletRequest httpServletRequest) {

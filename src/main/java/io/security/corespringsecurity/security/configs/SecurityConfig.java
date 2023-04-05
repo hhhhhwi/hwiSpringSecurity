@@ -75,11 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new CustomAuthenticationProvider();
 	}
 
-	@Bean   //passwordEncoder는 빈으로 등록
-	public PasswordEncoder passwordEncoder() {
-		//평문인 password를 암호화처리
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
+//	@Bean   //passwordEncoder는 빈으로 등록
+//	public PasswordEncoder passwordEncoder() {
+//		//평문인 password를 암호화처리
+//		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {

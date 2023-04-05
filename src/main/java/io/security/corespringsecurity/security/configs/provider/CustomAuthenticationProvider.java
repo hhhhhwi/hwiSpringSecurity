@@ -28,18 +28,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		AccountContext accountContext = (AccountContext) userDetailsService.loadUserByUsername(username);
 
 		if(!passwordEncoder.matches(password,accountContext.getAccount().getPassword())) {
-			throw new BadCredentialsException("올바른 패스워드가 아닙니다!");
+			throw new BadCredentialsException("Invalid password");
 		}
 
-		FormWebAuthenticationDetails formWebAuthenticationDetails = (FormWebAuthenticationDetails) authentication.getDetails();
+//		FormWebAuthenticationDetails formWebAuthenticationDetails = (FormWebAuthenticationDetails) authentication.getDetails();
+//
+//		if(formWebAuthenticationDetails.getSecretKey() == null || !"secret".equals(formWebAuthenticationDetails.getSecretKey())) {
+//			throw new InsufficientAuthenticationException("시크릿 키가 없음!");
+//		}
 
-		if(formWebAuthenticationDetails.getSecretKey() == null || !"secret".equals(formWebAuthenticationDetails.getSecretKey())) {
-			throw new InsufficientAuthenticationException("시크릿 키가 없음!");
-		}
-
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
-
-		return authenticationToken;
+		return new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
 	}
 
 	@Override

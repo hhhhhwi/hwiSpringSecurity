@@ -1,7 +1,7 @@
 package io.security.corespringsecurity.security.configs;
 
 import io.security.corespringsecurity.security.common.AjaxLoginAuthenticationEntryPoint;
-import io.security.corespringsecurity.security.configs.provider.CustomAuthenticationProvider;
+import io.security.corespringsecurity.security.configs.provider.AjaxAuthenticationProvider;
 import io.security.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -60,11 +62,15 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public CustomAuthenticationProvider customAuthenticationProvider() {
-		return new CustomAuthenticationProvider();
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
 	@Bean
+	public AjaxAuthenticationProvider customAuthenticationProvider() {
+		return new AjaxAuthenticationProvider(passwordEncoder());
+	}
+
 	public AjaxLoginProcessingFilter ajaxLoginProcessingFilter() throws Exception {
 		AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
 		ajaxLoginProcessingFilter.setAuthenticationManager(authenticationManagerBean()); // 매니저를 설정해줘야 한다.
